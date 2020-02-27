@@ -480,9 +480,124 @@ minetest.register_craft({
 })
 
 
+function doRegisterMetal( inMetalName, inMetalColor, SpawnRules )
+	--TODO: Implement SpawnRules
+	--Strings
+	local properName = inMetalName:sub(1,1):upper()..inMetalName:sub(2)
+	local id_ore = "mineralmatica:stone_with_"..inMetalName
+	local desc_ore = properName.." Ore"
+	local tiles_ore = {
+		"default_stone.png^(mineralmatica_base_mineral_b.png^[colorize:#"..
+		inMetalColor..
+		":170)"
+	}
 
+	local id_lump = "mineralmatica:"..inMetalName.."_lump"
+	local desc_lump = properName.." Lump";
+	local image_lump = "mineralmatica_base_lump.png^[colorize:#"..inMetalColor.."50"
 
+	local id_dust = "mineralmatica:"..inMetalName.."_dust"
+	local desc_dust = "Pile of "..properName.." Dust";
+	local image_dust = "mineralmatica_base_dust.png^[colorize:#"..inMetalColor.."50"
 
+	local id_nugget = "mineralmatica:"..inMetalName.."_nugget"
+	local desc_nugget = properName.." Nugget";
+	local image_nugget = "mineralmatica_base_nugget.png^[colorize:#"..inMetalColor.."50"
+
+	local id_ingot = "mineralmatica:"..inMetalName.."_ingot"
+	local desc_ingot = properName.." Ingot";
+	local image_ingot = "mineralmatica_base_ingot.png^[colorize:#"..inMetalColor.."50"
+
+	--Ores
+	minetest.register_node( id_ore, {
+		desc_ore = desc_ore,
+		tiles = tiles_ore,
+		groups = {cracky = 2},
+		drop = id_lump,
+		sounds = default.node_sound_stone_defaults(),
+	})
+	minetest.register_ore({
+		ore_type       = "scatter",
+		ore            = id_ore,
+		wherein        = "default:stone",
+		clust_scarcity = 9 * 9 * 9,
+		clust_num_ores = 12,
+		clust_size     = 3,
+		y_max          = 31000,
+		y_min          = 1025,
+	})
+	minetest.register_ore({
+		ore_type       = "scatter",
+		ore            = id_ore,
+		wherein        = "default:stone",
+		clust_scarcity = 7 * 7 * 7,
+		clust_num_ores = 5,
+		clust_size     = 3,
+		y_max          = 0,
+		y_min          = -31000,
+	})
+	minetest.register_ore({
+		ore_type       = "scatter",
+		ore            = id_ore,
+		wherein        = "default:stone",
+		clust_scarcity = 24 * 24 * 24,
+		clust_num_ores = 27,
+		clust_size     = 6,
+		y_max          = -64,
+		y_min          = -31000,
+	})
+	--Lump
+	minetest.register_craftitem( id_lump, {
+		description = desc_lump,
+		inventory_image = image_lump,
+	})
+	minetest.register_craft({
+		type = "cooking",
+		output = id_ingot,
+		recipe = id_lump,
+	})
+	--TODO: make TinyDust art
+	--Nickel Tiny Dust
+	--[[minetest.register_craftitem( "mineralmatica:nickel_smalldust", {
+		description = "Small Pile of "..properName,
+		groups = { ore_dust = 1 },
+		inventory_image = image_dust,
+	})]]-- 
+	--Nickel Dust
+	minetest.register_craftitem( id_dust, {
+		description = desc_dust,
+		groups = { ore_dust = 1 },
+		inventory_image = image_dust,
+	})
+	minetest.register_craft({
+		type = "cooking",
+		output = id_ingot,
+		recipe = id_dust,
+	})
+	--Nickel Nugget
+	minetest.register_craftitem( id_nugget, {
+		description = desc_nugget,
+		groups = { ore_dust = 1 },
+		inventory_image = image_nugget,
+	})
+	--Nickel Ingot
+	minetest.register_craftitem( id_ingot, {
+		description = desc_ingot,
+		inventory_image = image_ingot,
+	})
+	minetest.register_craft({
+		output = id_ingot,
+		recipe = {{
+			id_nugget, id_nugget, id_nugget,
+			id_nugget, id_nugget, id_nugget,
+			id_nugget, id_nugget, id_nugget
+		 }}
+	})
+end
+
+print( "[MINERALMATICA] Registerin metals..." )
+doRegisterMetal( "lithium", "bbDDbb", "default" )
+print( "[MINERALMATICA] Metals registered!" )
 
 --==========================
 --Nickel
